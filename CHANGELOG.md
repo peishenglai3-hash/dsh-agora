@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.1 — 2026-11-13
+
+- Remove UTF-8 BOM from package.json (DSH plugin_manager rejected it).
+- No behavior change.
+
 ## 0.2.0 — 2026-11-13
 
 - Optional explicit asset manifest (scenario/risk/role/tags/overlap/canonical).
