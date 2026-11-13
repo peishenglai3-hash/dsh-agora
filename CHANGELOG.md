@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.3.0 — 2026-11-13
+
+- Manifest `goalAny` filter for goal-sensitive assets.
+- Manifest `why`/role/canonical/overlapGroup retained in route.
+- 5 fixture tests; still advisory only.
+
 ## 0.2.1 — 2026-11-13
 
 - Remove UTF-8 BOM from package.json (DSH plugin_manager rejected it).

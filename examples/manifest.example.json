@@ -27,6 +27,7 @@
       "risk": ["high", "irreversible"],
       "role": "stream",
       "tags": ["backup", "private", "manifest", "clone"],
+      "goalAny": ["backup", "backup", "restore"],
       "canonical": true,
       "overlapGroup": "backup",
       "why": "sanitized backup with clone verification"

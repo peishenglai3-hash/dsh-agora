@@ -25,6 +25,8 @@ an absolute/relative path.
 - `asset` must match a live skill name.
 - `scenarios` is the allowed frame kind list; empty means all.
 - `risk` bounds when the asset is eligible.
+- `goalAny` (optional) requires at least one goal keyword; this is how a generic
+  `writing` frame excludes `chinese-novelist` unless the goal names fiction.
 - `overlapGroup` is used for `needsUser`; only top candidates are compared.
 - Missing manifest = keyword fallback (v0.1 behavior).
 - Manifest is advisory metadata; it never installs/executes anything.
