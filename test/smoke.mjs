@@ -1,0 +1,75 @@
+import test from 'node:test'
+import assert from 'node:assert/strict'
+import { mkdtempSync, mkdirSync, writeFileSync } from 'node:fs'
+import { tmpdir } from 'node:os'
+import { dirname, join, resolve } from 'node:path'
+import { fileURLToPath } from 'node:url'
+import { apply } from '../index.js'
+import { census, health, route } from '../lib/core.mjs'
+
+const HERE = dirname(fileURLToPath(import.meta.url))
+const WORKSPACE = resolve(HERE, '..')
+
+function harness() {
+  const defs = []
+  const ctx = {
+    effect(fn) { fn() },
+    tools: { register(def) { defs.push(def); return () => {} } },
+  }
+  apply(ctx, { workspace: WORKSPACE })
+  return { defs }
+}
+
+function fixture() {
+  const root = mkdtempSync(join(tmpdir(), 'agora-fixture-'))
+  const profile = join(root, 'profile')
+  mkdirSync(join(profile), { recursive: true })
+  writeFileSync(join(profile, 'package.json'), JSON.stringify({ dependencies: { '@local/a': 'link:a' }, dsh: { profile: { bundles: ['@local/a'] } } }))
+  mkdirSync(join(root, '.agents', 'skills', 'one'), { recursive: true })
+  mkdirSync(join(root, '.agents', 'skills', 'two'), { recursive: true })
+  writeFileSync(join(root, '.agents', 'skills', 'one', 'SKILL.md'), '---\nname: tdd\ndescription: code helper\n---\n# one\n')
+  writeFileSync(join(root, '.agents', 'skills', 'two', 'SKILL.md'), '---\nname: test-driven-development\ndescription: code helper two\n---\n# two\n')
+  mkdirSync(join(root, 'dsh-plugins', 'a', 'skills', 'x'), { recursive: true })
+  mkdirSync(join(root, 'dsh-plugins', 'a', 'references', 'old'), { recursive: true })
+  writeFileSync(join(root, 'dsh-plugins', 'a', 'skills', 'x', 'SKILL.md'), '---\nname: live\ndescription: research helper\n---\n# live\n')
+  writeFileSync(join(root, 'dsh-plugins', 'a', 'references', 'old', 'SKILL.md'), '---\nname: old\ndescription: archived\n---\n# old\n')
+  mkdirSync(join(root, 'dsh-plugins', 'orphan'), { recursive: true })
+  writeFileSync(join(root, 'dsh-plugins', 'orphan', 'package.json'), '{"name":"orphan"}')
+  return { root, workspace: root, profile }
+}
+
+test('registers exactly three read-only tools', () => {
+  const { defs } = harness()
+  assert.deepEqual(defs.map((d) => d.name).sort(), ['agora_census', 'agora_health', 'agora_route'])
+  for (const def of defs) assert.equal(def.parameters.additionalProperties, false)
+})
+
+test('live vs archived and duplicate detection on a fixture', () => {
+  const f = fixture()
+  const c = census(f)
+  assert.equal(c.counts.liveSkills, 3)
+  assert.equal(c.counts.archivedSkills, 1)
+  assert.equal(c.duplicates.length, 0)
+  assert.ok(c.skills.every((s) => s.name), 'every parsed skill must have a name')
+  const h = health(c, f.root)
+  assert.ok(h.unlinkedLocalDirs.includes('orphan'))
+})
+
+test('route is advisory and overlap needs a user decision', () => {
+  const c = census(fixture())
+  const r = route({ kind: 'code', risk: 'low' }, c)
+  assert.ok(r.receiptId)
+  assert.ok(Array.isArray(r.candidates))
+  assert.equal(r.needsUser, true)
+})
+
+test('census/health/route run through the plugin without profile writes', async () => {
+  const { defs } = harness()
+  const censusOut = JSON.parse(await defs.find((d) => d.name === 'agora_census').execute({}))
+  assert.ok(censusOut.counts.bundles >= 0)
+  assert.ok(typeof censusOut.profileHash === 'string' && censusOut.profileHash.length === 64)
+  const healthOut = JSON.parse(await defs.find((d) => d.name === 'agora_health').execute({}))
+  assert.equal(typeof healthOut.ok, 'boolean')
+  const routeOut = JSON.parse(await defs.find((d) => d.name === 'agora_route').execute({ kind: 'code', risk: 'medium' }))
+  assert.ok(routeOut.receiptId)
+})

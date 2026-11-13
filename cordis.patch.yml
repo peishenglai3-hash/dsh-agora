@@ -1,0 +1,8 @@
+# Agora v0.1 bundle layer.
+# Read-only by design: no profile writes, no install, no tool execution.
+# The tools census the active workspace (process.cwd()); set `workspace` only
+# if you need a fixed alternate root.
+- insert:
+    - id: agora
+      name: '@local/agora'
+      config: {}
