@@ -4,6 +4,12 @@
   "private": true,
   "type": "module",
   "description": "Agora v0.1: read-only asset census, health and advisory routing for DSH plugins, skills and MCPs.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/peishenglai3-hash/dsh-agora.git"
+  },
+  "homepage": "https://github.com/peishenglai3-hash/dsh-agora#readme",
   "exports": {
     ".": "./index.js",
     "./locale/*.json": "./locale/*.json"
