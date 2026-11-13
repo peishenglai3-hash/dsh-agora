@@ -66,6 +66,14 @@ live skills; without it, v0.1 keyword fallback remains. See
 [`docs/MANIFEST.md`](docs/MANIFEST.md) and
 [`examples/manifest.example.json`](examples/manifest.example.json).
 
+## Optional pre-step hint
+
+`preStepHint: false` is the default. If explicitly enabled, Agora listens to
+`agent/pre-step`, infers a coarse kind from the new user prompt, and injects at
+most one short advisory hint (`Agora hint: frame=... candidates=...`). It never
+executes a tool, never blocks a turn, and deduplicates the same prompt per agent.
+This is still disclosure, not automation; test it in a throwaway profile first.
+
 ## Verification
 
 ```powershell
@@ -74,8 +82,9 @@ node --check lib/core.mjs
 node --test test/smoke.mjs
 ```
 
-Expected: 6 tests pass; no profile writes. The fixture covers live/archived,
-duplicate names, manifest health, overlap arbitration and the three-tool registration.
+Expected: 7 tests pass; no profile writes. The fixture covers live/archived,
+duplicate names, manifest health, overlap arbitration, pre-step hint and the
+three-tool registration.
 
 ## Limits
 

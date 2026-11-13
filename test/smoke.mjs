@@ -105,6 +105,34 @@ test('explicit manifest narrows candidates and detects overlap', () => {
   assert.equal(r.overlap[0].group, 'tdd')
 })
 
+test('pre-step hint is opt-in, deduplicated and never blocks', () => {
+  const f = fixture()
+  mkdirSync(join(f.root, '.agora'), { recursive: true })
+  writeFileSync(join(f.root, '.agora', 'manifest.json'), JSON.stringify({
+    version: 1,
+    assets: [{ asset: 'tdd', scenarios: ['code'], risk: ['low', 'medium', 'high'], role: 'stream', overlapGroup: 'tdd', why: 'test-first' }],
+  }))
+  const events = {}
+  const defs = []
+  const ctx = {
+    effect(fn) { fn() },
+    tools: { register(def) { defs.push(def); return () => {} } },
+    on(name, fn) { events[name] = fn; return () => {} },
+  }
+  apply(ctx, { workspace: f.root, preStepHint: true })
+  assert.equal(typeof events['agent/pre-step'], 'function')
+  const injected = []
+  const agent = { inject: (m) => injected.push(m) }
+  const next = () => 'next'
+  const messages = [{ role: 'user', content: [{ type: 'text', text: 'modify code and run tests' }] }]
+  const result = events['agent/pre-step']({ agent, messages }, next)
+  assert.equal(result, 'next')
+  assert.equal(injected.length, 1)
+  assert.match(injected[0].content[0].text, /Agora hint/)
+  events['agent/pre-step']({ agent, messages }, next)
+  assert.equal(injected.length, 1)
+})
+
 test('census/health/route run through the plugin without profile writes', async () => {
   const { defs } = harness()
   const censusOut = JSON.parse(await defs.find((d) => d.name === 'agora_census').execute({}))

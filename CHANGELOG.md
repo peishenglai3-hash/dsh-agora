@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.6.0 — 2026-11-13
+
+- Opt-in `preStepHint` (default false): one advisory hint per new prompt,
+  deduplicated, fail-open; no tool execution.
+- Coarse prompt-kind inference for the hint.
+- 7 fixture tests.
+
 ## 0.5.0 — 2026-11-13
 
 - Fix manifestPath:false for true keyword-fallback benchmarks.

@@ -2,6 +2,7 @@
  * @local/agora v0.1 — Host-only, read-only asset census/health/route.
  * No DSH imports; no profile writes; no tool execution.
  */
+import { randomUUID } from 'node:crypto'
 import { census as coreCensus, health as coreHealth, route as coreRoute } from './lib/core.mjs'
 
 export const name = 'agora'
@@ -11,9 +12,40 @@ export const inject = ['tools']
 // not a raw JSON Schema. Configuration is read defensively in configOf().
 
 function configOf(config) {
-  return { workspace: config?.workspace || process.cwd(), profile: config?.profile || process.env.DSH_PROFILE_DIR, manifest: config?.manifest }
+  return { workspace: config?.workspace || process.cwd(), profile: config?.profile || process.env.DSH_PROFILE_DIR, manifest: config?.manifest, preStepHint: config?.preStepHint === true }
 }
 function text(v) { return [{ type: 'text', text: typeof v === 'string' ? v : JSON.stringify(v, null, 2) }] }
+function contextMessage(textValue) {
+  return { id: randomUUID(), role: 'user', content: [{ type: 'text', text: textValue }], source: { kind: 'agora-pre-step' } }
+}
+function lastUserText(messages) {
+  const list = Array.isArray(messages) ? messages : []
+  for (let i = list.length - 1; i >= 0; i--) {
+    const m = list[i]
+    if (m?.role !== 'user') continue
+    const parts = Array.isArray(m.content) ? m.content : []
+    const textPart = parts.find((p) => p?.type === 'text' && typeof p.text === 'string')
+    if (textPart) return textPart.text
+  }
+  return ''
+}
+function inferKind(prompt) {
+  const p = String(prompt || '').toLowerCase()
+  if (/(audit|backup|irreversible|发布|投稿|恢复|回滚)/.test(p)) return 'audit'
+  if (/(code|bug|test|plugin|refactor|build|代码|插件|修复|重构)/.test(p)) return 'code'
+  if (/(paper|research|literature|citation|论文|文献|研究)/.test(p)) return 'research'
+  if (/(write|essay|novel|draft|写作|论文|小说|润色)/.test(p)) return 'writing'
+  return 'core'
+}
+function hintFor(prompt, cfg) {
+  const c = coreCensus(cfg)
+  const kind = inferKind(prompt)
+  const r = coreRoute({ kind, risk: 'low', goal: prompt.slice(0, 300) }, c, { manifestPath: cfg.manifest })
+  const top = r.candidates.slice(0, 3).map((x) => x.asset)
+  if (!top.length) return ''
+  const overlap = r.overlap.length ? ` overlap=${r.overlap.map((x) => x.group).join(',')}` : ''
+  return `[Agora hint] frame=${kind} candidates=${top.join(',')}${overlap}${r.needsUser ? ' needsUser=true' : ''}. Advisory only; do not treat as executed.`
+}
 
 const censusTool = {
   name: 'agora_census',
@@ -62,9 +94,28 @@ const routeTool = {
 }
 
 export function apply(ctx, config) {
+  const cfg = configOf(config)
   ctx.effect(() => {
     const disposers = [censusTool, healthTool, routeTool].map((def) =>
       ctx.tools.register({ ...def, execute: (args) => def.execute(args, { config }) }))
     return () => { for (const d of disposers.reverse()) { try { d?.() } catch {} } }
   }, 'agora:tools')
+
+  if (cfg.preStepHint) {
+    const seen = new WeakMap()
+    ctx.effect(() => {
+      const off = ctx.on('agent/pre-step', ({ agent, messages }, next) => {
+        try {
+          const prompt = lastUserText(messages)
+          if (prompt && seen.get(agent) !== prompt) {
+            seen.set(agent, prompt)
+            const hint = hintFor(prompt, cfg)
+            if (hint) agent.inject(contextMessage(hint))
+          }
+        } catch { /* advisory hint must never block a turn */ }
+        return next()
+      })
+      return () => { try { off?.() } catch {} }
+    }, 'agora:pre-step-hint')
+  }
 }
