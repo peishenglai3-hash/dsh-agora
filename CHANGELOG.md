@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.4.0 — 2026-11-13
+
+- Manifest health: missing/archived assets, unknown scenarios/roles, duplicate
+  assets and multiple canonical members per overlap group.
+- 6 fixture tests.
+- Still read-only/advisory.
+
 ## 0.3.0 — 2026-11-13
 
 - Manifest `goalAny` filter for goal-sensitive assets.

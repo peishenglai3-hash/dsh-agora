@@ -34,8 +34,8 @@ const healthTool = {
   async execute(_args, ctx) {
     const cfg = configOf(ctx?.config)
     const c = coreCensus(cfg)
-    const h = coreHealth(c, cfg.workspace)
-    return JSON.stringify({ asOf: h.asOf, ok: h.ok, issues: h.issues, unlinkedLocalDirs: h.unlinkedLocalDirs }, null, 2)
+    const h = coreHealth(c, cfg.workspace, { manifestPath: cfg.manifest })
+    return JSON.stringify({ asOf: h.asOf, ok: h.ok, issues: h.issues, unlinkedLocalDirs: h.unlinkedLocalDirs, manifest: h.manifest }, null, 2)
   },
 }
 

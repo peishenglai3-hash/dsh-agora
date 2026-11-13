@@ -5,7 +5,7 @@ import { tmpdir } from 'node:os'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { apply } from '../index.js'
-import { census, health, route } from '../lib/core.mjs'
+import { census, health, route, validateManifest } from '../lib/core.mjs'
 
 const HERE = dirname(fileURLToPath(import.meta.url))
 const WORKSPACE = [
@@ -64,6 +64,27 @@ test('route is advisory and overlap needs a user decision', () => {
   assert.ok(r.receiptId)
   assert.ok(Array.isArray(r.candidates))
   assert.equal(r.needsUser, true)
+})
+
+test('manifest health reports missing, archived and canonical conflicts', () => {
+  const f = fixture()
+  const manifest = {
+    path: 'fixture-manifest.json',
+    assets: [
+      { asset: 'tdd', scenarios: ['code'], canonical: true, overlapGroup: 'tdd' },
+      { asset: 'test-driven-development', scenarios: ['code'], canonical: true, overlapGroup: 'tdd' },
+      { asset: 'does-not-exist', scenarios: ['code'] },
+      { asset: 'old', scenarios: ['research'] },
+      { asset: 'tdd', scenarios: ['bogus'], role: 'wrong' },
+    ],
+  }
+  const v = validateManifest(manifest, census(f))
+  assert.ok(v.missing.includes('does-not-exist'))
+  assert.ok(v.archived.includes('old'))
+  assert.equal(v.canonicalConflicts[0].group, 'tdd')
+  assert.ok(v.unknownScenarios.length >= 1)
+  assert.ok(v.unknownRoles.length >= 1)
+  assert.ok(v.duplicateAssets.includes('tdd'))
 })
 
 test('explicit manifest narrows candidates and detects overlap', () => {

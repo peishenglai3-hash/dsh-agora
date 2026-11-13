@@ -74,8 +74,8 @@ node --check lib/core.mjs
 node --test test/smoke.mjs
 ```
 
-Expected: 4 tests pass; no profile writes. The fixture covers live/archived,
-duplicate names, overlap arbitration and the three-tool registration.
+Expected: 6 tests pass; no profile writes. The fixture covers live/archived,
+duplicate names, manifest health, overlap arbitration and the three-tool registration.
 
 ## Limits
 

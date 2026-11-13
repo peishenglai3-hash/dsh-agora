@@ -29,4 +29,7 @@ an absolute/relative path.
   `writing` frame excludes `chinese-novelist` unless the goal names fiction.
 - `overlapGroup` is used for `needsUser`; only top candidates are compared.
 - Missing manifest = keyword fallback (v0.1 behavior).
+- `agora_health` reports manifest assets that are missing, archived, duplicated,
+  use unknown scenarios/roles, or have multiple canonical members in one overlap
+  group.
 - Manifest is advisory metadata; it never installs/executes anything.
