@@ -103,7 +103,8 @@ three-tool registration.
 - No pre-step hook, no enforce mode, no UI, no live MCP probing.
 - No auto-cleanup: it reports; a human decides.
 - Full text of the cited books was not all legally accessible; see PROVENANCE.
-- Not yet submitted to a DSH community index.
+- Not yet submitted to a DSH community index; see
+  [`docs/COMMUNITY.md`](docs/COMMUNITY.md) for the observed npm blockers.
 
 ## License
 
