@@ -45,7 +45,9 @@ claim that software is a society:
 - Selectorate theory: the user is the principal; hidden coalitions must not
   control defaults.
 
-See [`docs/PROVENANCE.md`](docs/PROVENANCE.md) for sources and evidence limits.
+See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md),
+[`docs/BOOKS.md`](docs/BOOKS.md) and [`docs/PROVENANCE.md`](docs/PROVENANCE.md)
+for the design, sources and evidence limits.
 
 ## Install
 
