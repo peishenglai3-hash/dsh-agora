@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.7.1 — 2026-11-13
+
+- Include `skills/` in the package file list; refresh description.
+- No runtime change.
+
 ## 0.7.0 — 2026-11-13
 
 - Ship the portable `skills/agora/SKILL.md` front-door skill.

@@ -1,9 +1,9 @@
 {
     "name":  "@local/agora",
-    "version":  "0.7.0",
+    "version":  "0.7.1",
     "private":  true,
     "type":  "module",
-    "description":  "Agora v0.1: read-only asset census, health and advisory routing for DSH plugins, skills and MCPs.",
+    "description":  "Agora: read-only asset census, health and advisory routing for DSH plugins, skills and MCPs.",
     "license":  "MIT",
     "repository":  {
                        "type":  "git",
@@ -24,6 +24,7 @@
                   "CHANGELOG.md",
                   "docs",
                   "examples",
+                  "skills",
                   "test/smoke.mjs"
               ],
     "dsh":  {
