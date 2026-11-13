@@ -7,8 +7,9 @@ plugins, skills and tools than a person (or a model) can reliably choose from.
 It does not replace `plugin_manager`; it makes the existing inventory legible,
 checkable and routable.
 
-> Status: **v0.1 preview**, advisory only. It does not install, uninstall,
-> execute a skill/tool, or edit the DSH profile.
+> Status: **v1.0 documentation baseline**, advisory only. It does not install,
+> uninstall, execute a skill/tool, or edit the DSH profile. Pre-step remains
+> opt-in and disabled by default.
 
 ## What it does
 

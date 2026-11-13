@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.0 — 2026-11-13
+
+- Architecture and book-provenance docs; documentation baseline.
+- No runtime behavior change; still read-only/advisory.
+- 7 fixture tests.
+
 ## 0.7.1 — 2026-11-13
 
 - Include `skills/` in the package file list; refresh description.
