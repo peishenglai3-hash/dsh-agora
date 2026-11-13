@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.2.0 — 2026-11-13
+
+- Optional explicit asset manifest (scenario/risk/role/tags/overlap/canonical).
+- Manifest-driven overlap arbitration; keyword fallback retained.
+- 5 fixture tests; docs/MANIFEST.md and examples manifest.
+- No profile writes; still advisory only.
+
 ## 0.1.0 — 2026-11-13
 
 - Initial preview: read-only census/health/route Host-only bundle.

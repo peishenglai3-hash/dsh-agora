@@ -1,0 +1,35 @@
+{
+  "version": 1,
+  "assets": [
+    {
+      "asset": "code-gate",
+      "scenarios": ["code"],
+      "risk": ["low", "medium", "high", "irreversible"],
+      "role": "enabling",
+      "tags": ["code", "gate", "verify"],
+      "canonical": true,
+      "overlapGroup": "code-discipline",
+      "why": "engineering gate before code changes"
+    },
+    {
+      "asset": "code-review",
+      "scenarios": ["code"],
+      "risk": ["low", "medium"],
+      "role": "enabling",
+      "tags": ["review", "standard", "spec"],
+      "canonical": true,
+      "overlapGroup": "code-review",
+      "why": "standards/spec review"
+    },
+    {
+      "asset": "system-backup-integrity",
+      "scenarios": ["audit"],
+      "risk": ["high", "irreversible"],
+      "role": "stream",
+      "tags": ["backup", "private", "manifest", "clone"],
+      "canonical": true,
+      "overlapGroup": "backup",
+      "why": "sanitized backup with clone verification"
+    }
+  ]
+}

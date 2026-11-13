@@ -58,6 +58,14 @@ Agora is a DSH bundle (Host-only, dependency-free). From a checkout:
 The tools census `process.cwd()` by default. To pin another root, set
 `workspace` in the bundle row's `config`.
 
+## Manifest
+
+For less noisy routing, add `<workspace>/.agora/manifest.json` (or set the
+bundle's `manifest` config). It declares scenario/risk/role/overlap/tags for
+live skills; without it, v0.1 keyword fallback remains. See
+[`docs/MANIFEST.md`](docs/MANIFEST.md) and
+[`examples/manifest.example.json`](examples/manifest.example.json).
+
 ## Verification
 
 ```powershell

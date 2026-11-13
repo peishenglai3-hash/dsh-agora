@@ -1,6 +1,6 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { mkdtempSync, mkdirSync, writeFileSync } from 'node:fs'
+import { mkdtempSync, mkdirSync, writeFileSync, existsSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -8,7 +8,10 @@ import { apply } from '../index.js'
 import { census, health, route } from '../lib/core.mjs'
 
 const HERE = dirname(fileURLToPath(import.meta.url))
-const WORKSPACE = resolve(HERE, '..')
+const WORKSPACE = [
+  resolve(HERE, '..', '..', '..'),
+  resolve(HERE, '..'),
+].find((p) => existsSync(join(p, 'tools', 'agora', 'agora.mjs'))) || resolve(HERE, '..')
 
 function harness() {
   const defs = []
@@ -61,6 +64,24 @@ test('route is advisory and overlap needs a user decision', () => {
   assert.ok(r.receiptId)
   assert.ok(Array.isArray(r.candidates))
   assert.equal(r.needsUser, true)
+})
+
+test('explicit manifest narrows candidates and detects overlap', () => {
+  const f = fixture()
+  mkdirSync(join(f.root, '.agora'), { recursive: true })
+  writeFileSync(join(f.root, '.agora', 'manifest.json'), JSON.stringify({
+    version: 1,
+    assets: [
+      { asset: 'tdd', scenarios: ['code'], risk: ['low', 'medium', 'high', 'irreversible'], role: 'enabling', overlapGroup: 'tdd', why: 'test-first' },
+      { asset: 'test-driven-development', scenarios: ['code'], risk: ['low', 'medium', 'high', 'irreversible'], role: 'enabling', overlapGroup: 'tdd', why: 'test-first alias' },
+    ],
+  }))
+  const c = census(f)
+  const r = route({ kind: 'code', risk: 'medium' }, c, { manifestPath: join(f.root, '.agora', 'manifest.json') })
+  assert.equal(r.manifest, join(f.root, '.agora', 'manifest.json'))
+  assert.deepEqual(r.candidates.map((x) => x.asset).sort(), ['tdd', 'test-driven-development'])
+  assert.equal(r.needsUser, true)
+  assert.equal(r.overlap[0].group, 'tdd')
 })
 
 test('census/health/route run through the plugin without profile writes', async () => {

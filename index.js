@@ -11,7 +11,7 @@ export const inject = ['tools']
 // not a raw JSON Schema. Configuration is read defensively in configOf().
 
 function configOf(config) {
-  return { workspace: config?.workspace || process.cwd(), profile: config?.profile || process.env.DSH_PROFILE_DIR }
+  return { workspace: config?.workspace || process.cwd(), profile: config?.profile || process.env.DSH_PROFILE_DIR, manifest: config?.manifest }
 }
 function text(v) { return [{ type: 'text', text: typeof v === 'string' ? v : JSON.stringify(v, null, 2) }] }
 
@@ -56,8 +56,8 @@ const routeTool = {
   async execute(args, ctx) {
     const cfg = configOf(ctx?.config)
     const c = coreCensus(cfg)
-    const r = coreRoute({ kind: args.kind, risk: args.risk || 'low', goal: args.goal || '' }, c)
-    return JSON.stringify({ receiptId: r.receiptId, frame: r.frame, candidates: r.candidates, rejected: r.rejected, overlap: r.overlap, needsUser: r.needsUser }, null, 2)
+    const r = coreRoute({ kind: args.kind, risk: args.risk || 'low', goal: args.goal || '' }, c, { manifestPath: cfg.manifest })
+    return JSON.stringify({ receiptId: r.receiptId, frame: r.frame, manifest: r.manifest, candidates: r.candidates, rejected: r.rejected, overlap: r.overlap, needsUser: r.needsUser }, null, 2)
   },
 }
 
