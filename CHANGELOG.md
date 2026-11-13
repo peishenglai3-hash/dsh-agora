@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.5.0 — 2026-11-13
+
+- Fix manifestPath:false for true keyword-fallback benchmarks.
+- 5-frame benchmark: manifest 6/6 code, 4/4 research, 5/5 writing, 2/2 audit.
+- No auto-execution; still advisory.
+
 ## 0.4.0 — 2026-11-13
 
 - Manifest health: missing/archived assets, unknown scenarios/roles, duplicate
