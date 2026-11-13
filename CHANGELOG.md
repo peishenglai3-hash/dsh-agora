@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.7.0 — 2026-11-13
+
+- Ship the portable `skills/agora/SKILL.md` front-door skill.
+- Clarify that a bundle does not auto-install workspace skills.
+- No runtime behavior change.
+
 ## 0.6.0 — 2026-11-13
 
 - Opt-in `preStepHint` (default false): one advisory hint per new prompt,

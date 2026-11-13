@@ -66,6 +66,14 @@ live skills; without it, v0.1 keyword fallback remains. See
 [`docs/MANIFEST.md`](docs/MANIFEST.md) and
 [`examples/manifest.example.json`](examples/manifest.example.json).
 
+## Front-door skill
+
+The package ships `skills/agora/SKILL.md` as a **portable workspace skill**. A
+DSH bundle does not automatically install it into `.agents/skills`; copy it there
+(or load it explicitly) if you want the agent-facing “call census/route before
+choosing assets” contract. Without the skill the tools still work, but the model
+has no front-door instruction.
+
 ## Optional pre-step hint
 
 `preStepHint: false` is the default. If explicitly enabled, Agora listens to
