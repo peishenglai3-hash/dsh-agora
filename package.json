@@ -1,7 +1,6 @@
 {
-    "name":  "@local/agora",
-    "version":  "1.0.0",
-    "private":  true,
+    "name":  "@peisheng_lai/dsh-agora",
+    "version":  "1.1.1",
     "type":  "module",
     "description":  "Agora: read-only asset census, health and advisory routing for DSH plugins, skills and MCPs.",
     "license":  "MIT",
@@ -38,5 +37,8 @@
     "scripts":  {
                     "test":  "node --test test/smoke.mjs",
                     "check":  "node --check index.js \u0026\u0026 node --check test/smoke.mjs"
-                }
+                },
+    "publishConfig":  {
+                          "access":  "public"
+                      }
 }

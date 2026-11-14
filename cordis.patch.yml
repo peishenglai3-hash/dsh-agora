@@ -4,5 +4,5 @@
 # if you need a fixed alternate root.
 - insert:
     - id: agora
-      name: '@local/agora'
+      name: '@peisheng_lai/dsh-agora'
       config: {}

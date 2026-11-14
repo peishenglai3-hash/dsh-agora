@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.1.1 — 2026-11-14
+
+- Publish corrected scoped package docs; npm availability recorded.
+- No runtime change.
+
 ## 1.0.0 — 2026-11-13
 
 - Architecture and book-provenance docs; documentation baseline.

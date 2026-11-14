@@ -1,5 +1,5 @@
 /**
- * @local/agora v0.1 — Host-only, read-only asset census/health/route.
+ * @peisheng_lai/dsh-agora v1.1 — Host-only, read-only asset census/health/route.
  * No DSH imports; no profile writes; no tool execution.
  */
 import { randomUUID } from 'node:crypto'

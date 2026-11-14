@@ -7,9 +7,9 @@ plugins, skills and tools than a person (or a model) can reliably choose from.
 It does not replace `plugin_manager`; it makes the existing inventory legible,
 checkable and routable.
 
-> Status: **v1.0 documentation baseline**, advisory only. It does not install,
-> uninstall, execute a skill/tool, or edit the DSH profile. Pre-step remains
-> opt-in and disabled by default.
+> Status: **v1.1.1**, advisory only. It does not install, uninstall, execute a
+> skill/tool, or edit the DSH profile. Pre-step remains opt-in and disabled by
+> default.
 
 ## What it does
 
@@ -56,7 +56,11 @@ Agora is a DSH bundle (Host-only, dependency-free). From a checkout:
 1. Review `cordis.patch.yml`, `index.js` and `lib/core.mjs`.
 2. In DSH use **Plugins → Add plugin** with this directory, or `plugin_manager`
    `install_bundle` when you explicitly want the change.
-3. After activation, call `agora_census` / `agora_health` / `agora_route`.
+3. Or install the published package:
+   ```powershell
+   npm install @peisheng_lai/dsh-agora
+   ```
+4. After activation, call `agora_census` / `agora_health` / `agora_route`.
 
 The tools census `process.cwd()` by default. To pin another root, set
 `workspace` in the bundle row's `config`.
@@ -103,8 +107,8 @@ three-tool registration.
 - No pre-step hook, no enforce mode, no UI, no live MCP probing.
 - No auto-cleanup: it reports; a human decides.
 - Full text of the cited books was not all legally accessible; see PROVENANCE.
-- Not yet submitted to a DSH community index; see
-  [`docs/COMMUNITY.md`](docs/COMMUNITY.md) for the observed npm blockers.
+- Published to npm as `@peisheng_lai/dsh-agora@1.1.1`; the DSH community index
+  has not yet picked it up — see [`docs/COMMUNITY.md`](docs/COMMUNITY.md).
 
 ## License
 
