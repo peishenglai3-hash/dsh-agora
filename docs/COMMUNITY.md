@@ -12,6 +12,10 @@ this package; the index crawler must see the npm release first.
 - DSH index query on 2026-11-14: `query=peisheng` returned the user's existing
   packages but not `dsh-agora`; this is an indexer timing result, not a claim
   that the package is listed.
+- registry PR: https://github.com/dshworks/awesome-dsh-plugins/pull/239
+  (OPEN; 7 generated files; CI `check` in progress at time of writing). A PR is
+  not an entry: the package is not in the index until the PR is merged and the
+  render/update is published.
 
 ## What was blocking, and what changed
 
